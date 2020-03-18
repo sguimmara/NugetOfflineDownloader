@@ -21,11 +21,11 @@ namespace NugetOfflineDownloader
 
         private FindPackageByIdResource _resource;
 
-        public Application(ILogger logger, string localCache)
+        public Application(Options options, ILogger logger)
         {
             CancellationToken cancellationToken = CancellationToken.None;
 
-            _localCache = localCache;
+            _localCache = options.OutputDirectory;
             _cache = new SourceCacheContext();
             _repository = Repository.Factory.GetCoreV3("https://api.nuget.org/v3/index.json");
             _logger = logger;

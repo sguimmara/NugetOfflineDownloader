@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
+using CommandLine;
 
 namespace NugetOfflineDownloader
 {
@@ -13,19 +14,29 @@ namespace NugetOfflineDownloader
     {
         public static int Main(string[] args)
         {
-            Task.Run(() => Run(args[0])).Wait();
+            Parser.Default
+                .ParseArguments<Options>(args)
+                .WithParsed<Options>(o =>
+                {
+                    Task.Run(() => Run(o)).Wait();
+                })
+                .WithNotParsed<Options>(e =>
+                {
+                    Console.Error.WriteLine(e.ToString());
+                    Environment.Exit(1);
+                });
 
             return 0;
         }
 
-        public static async Task Run(string manifestPath)
+        public static async Task Run(Options options)
         {
             ILogger logger = new ConsoleLogger();
-            Application nuget = new Application(logger, "packages");
+            Application nuget = new Application(options, logger);
 
             await nuget.Initialize(new CancellationTokenSource(4000).Token);
 
-            foreach (var item in Parse(manifestPath))
+            foreach (var item in Parse(options.Manifest))
             {
                 await nuget.DownloadPackageAsync(item.Item1, item.Item2, new CancellationTokenSource(10 * 60 * 1000).Token);
             }
