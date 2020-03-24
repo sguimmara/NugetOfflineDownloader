@@ -33,6 +33,8 @@ namespace NugetOfflineDownloader
             _cache = new SourceCacheContext();
             _repository = Repository.Factory.GetCoreV3("https://api.nuget.org/v3/index.json");
             _logger = logger;
+
+            Directory.CreateDirectory(options.OutputDirectory);
         }
 
         public async Task Initialize(CancellationToken ct)
@@ -85,7 +87,6 @@ namespace NugetOfflineDownloader
                     }
                     foreach (var dep in dg.Packages)
                     {
-                        string depId = dep.Id;
                         var depVersion = dep.VersionRange.MinVersion;
 
                         var depPackageId = new PackageIdentity(dep.Id, depVersion);

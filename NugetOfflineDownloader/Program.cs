@@ -36,40 +36,9 @@ namespace NugetOfflineDownloader
 
             await nuget.Initialize(new CancellationTokenSource(4000).Token);
 
-            foreach (var item in Parse(options.Manifest))
+            foreach (var pkg in Manifest.Parse(options.Manifest, logger).Packages)
             {
-                await nuget.DownloadPackageAsync(item.Item1, item.Item2, new CancellationTokenSource(10 * 60 * 1000).Token);
-            }
-        }
-
-        private static IEnumerable<Tuple<string, string>> Parse(string manifestPath)
-        {
-            using (FileStream fs = new FileStream(manifestPath, FileMode.Open))
-            {
-                using (TextReader reader = new StreamReader(fs))
-                {
-                    string id = null;
-                    string version = null;
-
-                    while (true)
-                    {
-                        string line = reader.ReadLine();
-                        if (line == null)
-                        {
-                            yield break;
-                        }
-                        else if (line.StartsWith("Id"))
-                        {
-                            id = line.Split(':').Last().Trim();
-                        }
-                        else if (line.StartsWith("Version"))
-                        {
-                            version = line.Split(':').Last().Trim();
-
-                            yield return new Tuple<string, string>(id, version);
-                        }
-                    }
-                }
+                await nuget.DownloadPackageAsync(pkg.Id, pkg.Version, new CancellationTokenSource(10 * 60 * 1000).Token);
             }
         }
     }
