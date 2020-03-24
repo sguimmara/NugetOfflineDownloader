@@ -47,15 +47,32 @@ namespace NugetOfflineDownloader
             {
                 try
                 {
-                    var dl = await _resource.GetPackageDownloaderAsync(packageId, _cache, _logger, ct);
-                    await dl.CopyNupkgFileToAsync(outputFile, ct);
+                    bool exists = await _resource.DoesPackageExistAsync(packageId.Id, packageId.Version, _cache, _logger, ct);
+                    if (exists)
+                    {
+                        var dl = await _resource.GetPackageDownloaderAsync(packageId, _cache, _logger, ct);
+                        await dl.CopyNupkgFileToAsync(outputFile, ct);
+                    }
+                    else
+                    {
+                        _logger.LogError($"the package {packageId} does not exist on {_repository.PackageSource}");
+                    }
                 }
                 catch (Exception e)
                 {
                     _logger.LogError(e.Message);
                 }
             }
+            else
+            {
+                _logger.LogInformation($"  SKIP {packageId} (already in cache)");
+            }
 
+            await DownloadDependencies(packageId, ct);
+        }
+
+        private async Task DownloadDependencies(PackageIdentity packageId, CancellationToken ct)
+        {
             var deps = await _resource.GetDependencyInfoAsync(packageId.Id, packageId.Version, _cache, _logger, ct);
 
             if (deps != null && deps.DependencyGroups != null)
