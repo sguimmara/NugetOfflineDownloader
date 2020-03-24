@@ -11,7 +11,7 @@ namespace NugetOfflineDownloader
     {
         public override void Log(ILogMessage message)
         {
-            Console.WriteLine($"{message.Level,10} {message.Message}");
+            Console.WriteLine($"{message.Level.ToString().ToUpperInvariant(),-12} {message.Message}");
         }
 
         public override Task LogAsync(ILogMessage message)
