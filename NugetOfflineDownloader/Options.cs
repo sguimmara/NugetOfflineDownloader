@@ -14,5 +14,8 @@ namespace NugetOfflineDownloader
 
         [Value(index: 0, HelpText = "the manifest file containing the output of 'Get-Package | Format-List -Property Id,Version'")]
         public string Manifest { get; set; }
+
+        [Option(shortName:'f', Default = ".NETFramework", HelpText = "list of accepted frameworks separated by commas")]
+        public string Frameworks { get; set; }
     }
 }

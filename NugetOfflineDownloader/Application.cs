@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
+using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
@@ -18,12 +19,15 @@ namespace NugetOfflineDownloader
         private readonly SourceCacheContext _cache;
         private readonly SourceRepository _repository;
         private readonly ILogger _logger;
+        private readonly HashSet<string> _acceptedFrameworks = new HashSet<string> { "Any" };
 
         private FindPackageByIdResource _resource;
 
         public Application(Options options, ILogger logger)
         {
             CancellationToken cancellationToken = CancellationToken.None;
+
+            _acceptedFrameworks.AddRange(options.Frameworks.Split(',').Select(s => s.Trim()));
 
             _localCache = options.OutputDirectory;
             _cache = new SourceCacheContext();
@@ -58,7 +62,7 @@ namespace NugetOfflineDownloader
             {
                 foreach (var dg in deps.DependencyGroups)
                 {
-                    if (dg.TargetFramework.Framework != ".NETFramework")
+                    if (!_acceptedFrameworks.Contains(dg.TargetFramework.Framework))
                     {
                         continue;
                     }

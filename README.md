@@ -12,8 +12,8 @@ This application is designed to download missing packages from an offline Visual
 1. Copy the `packages.txt` file to the online computer
 1. Execute
     ```
-    NugetOfflineDownloader.exe packages.txt -o packages
+    NugetOfflineDownloader.exe packages.txt -o packages -f .NETFramework
     ```
-    To download all packages and their dependency into the `packages` directory.
+    To download all packages and their dependency into the `packages` directory, filtering only the framework `.NETFramework` (excluding .NET core versions for example).
 1. Copy the `packages` directory to the offline computer
 1. Add this directory as a nuget source (see https://docs.microsoft.com/en-us/nuget/consume-packages/install-use-packages-visual-studio for more information)
