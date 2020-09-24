@@ -6,9 +6,11 @@ This application is designed to download missing packages from an offline Visual
 1. Open the solution with Visual Studio
 1. Open the nuget console (`Tools` > `NuGet Package manager` > `Console`)
 1. Type
+
+    ```powershell
+    Get-Package | Select-Object Id,Version -Unique > packages.txt
     ```
-    Get-Package | Format-List -Property Id,Version > packages.txt
-    ```
+
 1. Copy the `packages.txt` file to the online computer
 1. Execute
     ```
