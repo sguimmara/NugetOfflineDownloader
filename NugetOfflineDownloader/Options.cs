@@ -17,5 +17,8 @@ namespace NugetOfflineDownloader
 
         [Option(shortName:'f', Default = ".NETFramework", HelpText = "list of accepted frameworks separated by commas")]
         public string Frameworks { get; set; }
+
+        [Option(shortName: 'u', Default = "https://api.nuget.org/v3/index.json", Required = false, HelpText = "url of Nuget repository")]
+        public string NugetServiceUrl { get; set; }
     }
 }

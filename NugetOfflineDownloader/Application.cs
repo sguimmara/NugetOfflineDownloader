@@ -31,7 +31,7 @@ namespace NugetOfflineDownloader
 
             _localCache = options.OutputDirectory;
             _cache = new SourceCacheContext();
-            _repository = Repository.Factory.GetCoreV3("https://api.nuget.org/v3/index.json");
+            _repository = Repository.Factory.GetCoreV3(options.NugetServiceUrl);
             _logger = logger;
 
             Directory.CreateDirectory(options.OutputDirectory);
