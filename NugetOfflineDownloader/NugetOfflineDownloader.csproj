@@ -59,7 +59,7 @@
       <Version>2.7.82</Version>
     </PackageReference>
     <PackageReference Include="NuGet.Protocol">
-      <Version>5.5.0</Version>
+      <Version>5.9.3</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
